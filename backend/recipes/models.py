@@ -62,15 +62,13 @@ class Recipes(models.Model):
         through='IngredientsRecipes',
         verbose_name='Ингредиенты',
         help_text='Выберите ингредиенты',
-        related_name='recipes',
-        )
+        related_name='recipes')
     tags = models.ForeignKey(
         Tags,
         on_delete=models.SET_NULL,
         blank=False,
         null=True,
-        verbose_name='tags'
-        )
+        verbose_name='tags')
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовление',
         validators=[MinValueValidator(1, message='Время меньше 1 минуты'),

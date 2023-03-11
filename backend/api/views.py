@@ -1,8 +1,8 @@
-from django.http import FileResponse
 from api.filters import IngredientsFilter, RecipesFilter
 from api.serializers import (CustomUserSerializer, IngredientsSerializer,
-                             RecipesReadSerializer, RecipesCreateSerializer,
+                             RecipesCreateSerializer, RecipesReadSerializer,
                              SubscriptionsSerializer, TagsSerializer)
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
