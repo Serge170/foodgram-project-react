@@ -1,48 +1,28 @@
+from colorfield.fields import ColorField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 from users.models import User as User
 
-# Create your models here.
-"""Рецепт
-Рецепт должен описываться такими полями:
-Автор публикации (пользователь).
-Название.
-Картинка.
-Текстовое описание.
-Ингредиенты: продукты для приготовления блюда по рецепту.
-Множественное поле, выбор из предустановленного списка,
-с указанием количества и единицы измерения.
-Тег (можно установить несколько тегов на один рецепт,
-выбор из предустановленных).
-Время приготовления в минутах.
-Все поля обязательны для заполнения."""
-
 
 class Tags(models.Model):
-    """Тег
-Тег должен описываться такими полями:
-Название.
-Цветовой HEX-код (например, #49B64E).
-Slug.
-Все поля обязательны для заполнения и уникальны."""
+    """Настройка модели Тэг"""
     name = models.CharField(max_length=50, verbose_name='Название тега')
-    color = models.CharField(
-        'Цвет',
-        max_length=7,
-        unique=True)
+    color = ColorField(
+        format='hex',
+        default='#FF0000',
+        verbose_name='Цветовой HEX-код',
+        help_text='Цветовой HEX-код',
+    )
     slug = models.SlugField(max_length=200, unique=True, verbose_name='slug')
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
 
 class Ingredients(models.Model):
-    """Ингредиент
-Данные об ингредиентах хранятся в нескольких связанных таблицах.
-В результате на стороне пользователя ингредиент
-должен описываться такими полями:
-Название.
-Количество.
-Единицы измерения.
-Все поля обязательны для заполнения."""
+    """Настройка модели Ингридиенты"""
     name = models.CharField(max_length=50, verbose_name='Название ингридиета')
     measurement_unit = models.CharField(
         max_length=50,
@@ -64,19 +44,7 @@ class Ingredients(models.Model):
 
 
 class Recipes(models.Model):
-    """"Рецепт должен описываться такими полями:
-Автор публикации (пользователь).
-Название.
-Картинка.
-Текстовое описание.
-Ингредиенты: продукты для приготовления блюда по рецепту.
-Множественное поле, выбор из предустановленного списка,
-с указанием количества и единицы измерения.
-Тег (можно установить несколько тегов на один рецепт,
-выбор из предустановленных).
-Время приготовления в минутах.
-Все поля обязательны для заполнения."""
-    """Модель рецепта."""
+    """Настройка модели Рецепты"""
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -106,42 +74,16 @@ class Recipes(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовление',
         validators=[MinValueValidator(1, message='Время меньше 1 минуты'),
-                    MaxValueValidator(1140, message='Время больше 1490 минут'),
+                    MaxValueValidator(300, message='Время больше 300 минут'),
                     ])
+
+    class Meta:
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
 
 
 class IngredientsRecipes(models.Model):
-    """Модель для связи рецептов и ингредиентов."""
-    recipes = models.ForeignKey(
-        Recipes,
-        verbose_name='Рецепт',
-        on_delete=models.CASCADE,
-        related_name='ingredient_recipes'
-    )
-    ingredient = models.ForeignKey(
-        Ingredients,
-        verbose_name='Ингредиент',
-        on_delete=models.CASCADE,
-        related_name='ingredient_recipes'
-    )
-    amount = models.PositiveSmallIntegerField(
-        'Количество',
-        validators=(
-            MinValueValidator(
-                1, message='Выберете хотя бы 1 ингредиент.'),
-        )
-    )
-
-    class Meta:
-        verbose_name = 'Количество ингредиента'
-        verbose_name_plural = 'Количество ингредиентов'
-
-    def __str__(self):
-        return (f'{self.ingredient.name} - {self.amount}'
-                f' {self.ingredient.measurement_unit}')
-
-
-class IngredientsAmount(models.Model):
+    """Модель для настройки количества ингредиентов."""
     ingredient = models.ForeignKey(
         Ingredients,
         on_delete=models.CASCADE,
@@ -162,7 +104,7 @@ class IngredientsAmount(models.Model):
                 1, 'Количество ингредиентов не может быть меньше 1!'
             ),
             MaxValueValidator(
-                1000, 'Количество ингредиентов не может быть больше 1000!'
+                100, 'Количество ингредиентов не может быть больше 100!'
             )
         ],
         default=1,
@@ -217,7 +159,7 @@ class Subscriptions(models.Model):
         return f'{self.user} {self.author}'
 
 
-class Favorite(models.Model):
+class FavoriteResipes(models.Model):
     """Модель избранных рецептов пользователя."""
     user = models.ForeignKey(
         User,

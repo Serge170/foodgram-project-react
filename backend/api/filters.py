@@ -1,12 +1,17 @@
 """pass"""
 from django_filters.rest_framework import FilterSet, filters
-from recipes.models import Recipes, Tags
-from rest_framework.filters import SearchFilter
+from recipes.models import Recipes, Tags, Ingredients
 
 
-class IngredientsFilter(SearchFilter):
-    """pass"""
-    search_param = 'name'
+class IngredientsFilter(FilterSet):
+    name = filters.CharFilter(
+        field_name='name',
+        lookup_expr='istartswith'
+    )
+
+    class Meta:
+        model = Ingredients
+        fields = ('name',)
 
 
 class RecipesFilter(FilterSet):
