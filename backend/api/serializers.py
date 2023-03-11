@@ -1,11 +1,10 @@
 """Файл настройки селиализаторов"""
-from api.fields import Base64ImageField
+from api.fields import Base64ImageField, Hex2NameColor
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Subscriptions, Tags)
 from rest_framework import serializers
 from users.models import User
-from .fields import Base64ImageField, Hex2NameColor
 
 
 class CreateUserSerializer(UserCreateSerializer):

@@ -15,21 +15,3 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
 ]
-
-
-
-# from django.contrib import admin
-# from django.urls import include, path
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('api/', include('djoser.urls')),
-#     path('api/auch', include('djoser.urls.authtoken'))
-# ]
-
-
-
-
-
-
-

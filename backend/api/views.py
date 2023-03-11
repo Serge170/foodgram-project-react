@@ -1,9 +1,8 @@
+from django.http import FileResponse
 from api.filters import IngredientsFilter, RecipesFilter
 from api.serializers import (CustomUserSerializer, IngredientsSerializer,
                              RecipesReadSerializer, RecipesCreateSerializer,
                              SubscriptionsSerializer, TagsSerializer)
-from django.db.models import Sum
-from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
@@ -98,7 +97,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 database.objects.create(
                     user=self.request.user,
                     recipes=recipes)
-                serializer = SubscribeRecipesSerializer(recipes)
+                serializer = SubscriptionsSerializer(recipes)
                 return Response(serializer.data,
                                 status=status.HTTP_201_CREATED)
             text = 'errors: Объект уже в списке.'
