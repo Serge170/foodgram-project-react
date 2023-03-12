@@ -20,11 +20,11 @@ services:
     restart: always
 
   frontend:
-    image: serge170/foodgram_frontend
+    image: serge170/foodgram_frontend:v1
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
-      - db
+      - backend
 
   nginx:
     image: nginx:1.19.3
