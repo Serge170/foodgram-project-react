@@ -20,7 +20,7 @@ services:
     restart: always
 
   frontend:
-    image: serge170/foodgram_frontend:v1
+    image: serge170/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
