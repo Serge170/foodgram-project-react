@@ -9,7 +9,7 @@ services:
       - .env
 
   backend:
-    image: serge170/foodgram_backend
+    image: serge170/foodgram:latest
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -18,15 +18,11 @@ services:
     env_file:
       - .env
     restart: always
-    container_name: foodgram_backend
 
   frontend:
-    image: serge170/foodgram_frontend
+    image: serge170/foodgram_front:v1.0
     volumes:
       - ../frontend/:/app/result_build/
-    depends_on:
-      - db
-    container_name: foodgram_frontend
 
 
   nginx:
@@ -41,7 +37,7 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - backend
-    container_name: foodgram_nginx
+      - frontend
 
 volumes:
   postgres_data:
