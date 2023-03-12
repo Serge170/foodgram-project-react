@@ -130,5 +130,4 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
             for name, amount in shop_cart.items():
                 f.write(f'* {name} - {amount}\n')
-
         return FileResponse(open(file, 'rb'), as_attachment=True)
