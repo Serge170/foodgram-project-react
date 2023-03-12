@@ -88,32 +88,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return RecipesReadSerializer
         return RecipesCreateSerializer
 
-    def post_del_recipes(self, request, pk, database):
-        recipes = get_object_or_404(Recipes, id=pk)
-        if request.method == 'POST':
-            if not database.objects.filter(
-                    user=self.request.user,
-                    recipes=recipes).exists():
-                database.objects.create(
-                    user=self.request.user,
-                    recipes=recipes)
-                serializer = SubscriptionsSerializer(recipes)
-                return Response(serializer.data,
-                                status=status.HTTP_201_CREATED)
-            text = 'errors: Объект уже в списке.'
-            return Response(text, status=status.HTTP_400_BAD_REQUEST)
-
-        if request.method == 'DELETE':
-            if database.objects.filter(
-                    user=self.request.user,
-                    recipes=recipes).exists():
-                database.objects.filter(
-                    user=self.request.user,
-                    recipes=recipes).delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            text = 'errors: Объект не в списке.'
-            return Response(text, status=status.HTTP_400_BAD_REQUEST)
-
     @action(
         detail=True,
         methods=['POST', 'DELETE'],
