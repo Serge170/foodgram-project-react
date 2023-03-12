@@ -9,7 +9,7 @@ services:
       - .env
 
   backend:
-    image: serge170/foodgram_backend
+    image: serge170/foodgram_backend:v1
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -20,7 +20,7 @@ services:
     restart: always
 
   frontend:
-    image: serge170/foodgram_frontend
+    image: serge170/foodgram_frontend:v1
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
