@@ -114,10 +114,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
             text = 'errors: Объект не в списке.'
             return Response(text, status=status.HTTP_400_BAD_REQUEST)
 
-        else:
-            text = 'errors: Метод обращения недопустим.'
-            return Response(text, status=status.HTTP_400_BAD_REQUEST)
-
     @action(
         detail=True,
         methods=['POST', 'DELETE'],
