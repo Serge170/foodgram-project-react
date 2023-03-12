@@ -8,12 +8,10 @@ from users.models import User as User
 class Tags(models.Model):
     """Настройка модели Тэг"""
     name = models.CharField(max_length=50, verbose_name='Название тега')
-    color = ColorField(
-        format='hex',
-        default='#FF0000',
-        verbose_name='Цветовой HEX-код',
-        help_text='Цветовой HEX-код',
-    )
+    color = models.CharField(
+        max_length=50,
+        default="#E26C2D",
+        verbose_name='Цвет')
     slug = models.SlugField(max_length=200, unique=True, verbose_name='slug')
 
     class Meta:
