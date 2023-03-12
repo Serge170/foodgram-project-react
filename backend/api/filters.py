@@ -39,4 +39,3 @@ class RecipesFilter(FilterSet):
         """pass"""
         if value and self.request.user.is_authenticated:
             return queryset.filter(shopping_list__user=self.request.user)
-        return
