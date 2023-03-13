@@ -78,7 +78,6 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
 
 class TagsSerializer(serializers.ModelSerializer):
     """ Сериализатор просмотра тегов """
-    
     class Meta:
         model = Tags
         fields = ('id', 'name', 'color', 'slug')
