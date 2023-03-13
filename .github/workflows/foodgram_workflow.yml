@@ -61,7 +61,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: sege170/foodgram_backend:v1.0
+          tags: serge170/foodgram_backend:v1.0
 
   deploy:
     runs-on: ubuntu-latest
