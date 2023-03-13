@@ -1,5 +1,5 @@
 """Файл настройки селиализаторов"""
-from api.fields import Base64ImageField, Hex2NameColor
+from api.fields import Base64ImageField
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Subscriptions, Tags)
@@ -78,8 +78,6 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
 
 class TagsSerializer(serializers.ModelSerializer):
     """ Сериализатор просмотра тегов """
-    color = Hex2NameColor()
-
     class Meta:
         model = Tags
         fields = ('id', 'name', 'color', 'slug')
