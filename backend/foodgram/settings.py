@@ -17,10 +17,8 @@ SECRET_KEY = (os.getenv('SECRET_KEY'),)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG_VALUE') == 'True'
 
-# ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
-# ALLOWED_HOSTS = ['51.250.68.73', 'localhost', 'HTTP', 'backend']
-ALLOWED_HOSTS = ['51.250.68.73', 'localhost', '127.0.0.1', 'backend']
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '51.250.68.73']
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
+
 
 
 AUTH_USER_MODEL = 'users.User'
