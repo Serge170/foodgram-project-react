@@ -1,24 +1,25 @@
+''' Настройка админ панели.'''
 from django.contrib import admin
-
-from .models import (FavoriteResipes, Follow, Ingredients, IngredientsRecipes,
-                     Recipes, ShoppingCart, Tags)
+from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
+                            Recipes, ShoppingCart, Tags)
+from users.models import Subscriptions
 
 
 class TagsAdmin(admin.ModelAdmin):
-    """Тэги с поиском по названию."""
+    ''' Модель Tags в интерфейсе админ панели.'''
     list_display = ('name', 'color', 'slug')
     search_fields = ('name',)
 
 
 class RecipesAdmin(admin.ModelAdmin):
-    """"""
+    ''' Модель Recipes в интерфейсе админ панели.'''
     list_display = ('author', 'name', 'cooking_time')
     search_fields = ('name', 'author', 'tags')
     list_filter = ('author', 'name', 'tags')
 
 
 class IngredientsAdmin(admin.ModelAdmin):
-    """"""
+    ''' Модель Ingredients в интерфейсе админ панели.'''
     list_display = (
         'name',
         'measurement_unit',
@@ -28,7 +29,7 @@ class IngredientsAdmin(admin.ModelAdmin):
 
 
 class IngredientsRecipesAdmin(admin.ModelAdmin):
-    """"""
+    ''' Модель Ingredients в интерфейсе админ панели.'''
     list_display = (
         'ingredient',
         'recipes',
@@ -37,8 +38,8 @@ class IngredientsRecipesAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class FollowAdmin(admin.ModelAdmin):
-    """"""
+class SubscriptionsAdmin(admin.ModelAdmin):
+    ''' Модель Subscriptions в интерфейсе админ панели.'''
     list_display = (
         'user',
         'author',
@@ -47,7 +48,7 @@ class FollowAdmin(admin.ModelAdmin):
 
 
 class FavoriteResipesAdmin(admin.ModelAdmin):
-    """"""
+    ''' Модель FavoriteResipes в интерфейсе админ панели.'''
     list_display = (
         'user',
         'recipes',
@@ -56,7 +57,7 @@ class FavoriteResipesAdmin(admin.ModelAdmin):
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
-    """"""
+    ''' Модель ShoppingCart в интерфейсе админ панели.'''
     list_display = (
         'user',
         'recipes',
@@ -64,7 +65,7 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-admin.site.register(Follow, FollowAdmin)
+admin.site.register(Subscriptions, SubscriptionsAdmin)
 admin.site.register(Ingredients, IngredientsAdmin)
 admin.site.register(Recipes, RecipesAdmin)
 admin.site.register(IngredientsRecipes, IngredientsRecipesAdmin)
