@@ -69,7 +69,6 @@ class FavoriteResipesSerializer(serializers.ModelSerializer):
             instance.recipes, context=context).data
 
 
-
 class CustomUserSerializer(UserSerializer):
     ''' Сериализатор для пользователя.  Показывает статус подписум.'''
     is_subscribed = serializers.SerializerMethodField(read_only=True)
