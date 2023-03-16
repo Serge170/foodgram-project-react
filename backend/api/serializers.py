@@ -67,12 +67,13 @@ class FavoriteResipesSerializer(serializers.ModelSerializer):
         context = {'request': request}
         return ShoppingCartSerializer(
             instance.recipes, context=context).data
-        fields = ('id', 'name', 'image', 'cooking_time')
+
 
 
 class CustomUserSerializer(UserSerializer):
     ''' Сериализатор для пользователя.  Показывает статус подписум.'''
     is_subscribed = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = User
         fields = (
