@@ -20,7 +20,6 @@ DEBUG = os.getenv('DEBUG_VALUE') == 'True'
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
 
 # DEBUG = True
-
 # ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = 'users.User'
