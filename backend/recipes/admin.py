@@ -2,7 +2,6 @@
 from django.contrib import admin
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
-from users.models import Subscriptions
 
 
 class TagsAdmin(admin.ModelAdmin):
@@ -38,15 +37,6 @@ class IngredientsRecipesAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class SubscriptionsAdmin(admin.ModelAdmin):
-    ''' Модель Subscriptions в интерфейсе админ панели.'''
-    list_display = (
-        'user',
-        'author',
-    )
-    empty_value_display = '-пусто-'
-
-
 class FavoriteResipesAdmin(admin.ModelAdmin):
     ''' Модель FavoriteResipes в интерфейсе админ панели.'''
     list_display = (
@@ -65,7 +55,6 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-admin.site.register(Subscriptions, SubscriptionsAdmin)
 admin.site.register(Ingredients, IngredientsAdmin)
 admin.site.register(Recipes, RecipesAdmin)
 admin.site.register(IngredientsRecipes, IngredientsRecipesAdmin)
