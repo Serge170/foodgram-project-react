@@ -1,10 +1,9 @@
 ''' Файл настройки селиализаторов.'''
 from api.fields import Base64ImageField
-from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
 from rest_framework import serializers
-from users.models import Subscriptions, User
+from users.serializers import CustomUserSerializer
 
 
 class RecipesShortSerializer(serializers.ModelSerializer):
@@ -69,55 +68,55 @@ class FavoriteResipesSerializer(serializers.ModelSerializer):
             instance.recipes, context=context).data
 
 
-class CustomUserSerializer(UserSerializer):
-    ''' Сериализатор для пользователя.  Показывает статус подписум.'''
-    is_subscribed = serializers.SerializerMethodField(read_only=True)
+# class CustomUserSerializer(UserSerializer):
+#     ''' Сериализатор для пользователя.  Показывает статус подписум.'''
+#     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
-    class Meta:
-        model = User
-        fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed')
+#     class Meta:
+#         model = User
+#         fields = (
+#             'email',
+#             'id',
+#             'username',
+#             'first_name',
+#             'last_name',
+#             'is_subscribed')
 
-    def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return Subscriptions.objects.filter(user=user, author=obj.id).exists()
-
-
-class ShortRecipeSerializer(serializers.ModelSerializer):
-    ''' Сериализатор для краткого отображения сведений о рецепте'''
-    class Meta:
-        model = Recipes
-        fields = ('id', 'name', 'image', 'cooking_time')
+#     def get_is_subscribed(self, obj):
+#         user = self.context.get('request').user
+#         if user.is_anonymous:
+#             return False
+#         return Subscriptions.objects.filter(user=user, author=obj.id).exists()
 
 
-class SubscriptionsSerializer(CustomUserSerializer):
-    ''' Сериализатор для вывода подписок пользователя.'''
-    recipes = serializers.SerializerMethodField(read_only=True)
-    recipes_count = serializers.SerializerMethodField(read_only=True)
+# class ShortRecipesSerializer(serializers.ModelSerializer):
+#     ''' Сериализатор для краткого отображения сведений о рецепте'''
+#     class Meta:
+#         model = Recipes
+#         fields = ('id', 'name', 'image', 'cooking_time')
 
-    class Meta:
-        model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'is_subscribed', 'recipes', 'recipes_count')
 
-    @staticmethod
-    def get_recipes_count(obj):
-        return obj.recipes.count()
+# class SubscriptionsSerializer(CustomUserSerializer):
+#     ''' Сериализатор для вывода подписок пользователя.'''
+#     recipes = serializers.SerializerMethodField(read_only=True)
+#     recipes_count = serializers.SerializerMethodField(read_only=True)
 
-    def get_recipes(self, obj):
-        request = self.context.get('request')
-        recipes = obj.recipes.all()
-        recipes_limit = request.query_params.get('recipes_limit')
-        if recipes_limit:
-            recipes = recipes[:int(recipes_limit)]
-        return ShortRecipeSerializer(recipes, many=True).data
+#     class Meta:
+#         model = User
+#         fields = ('email', 'id', 'username', 'first_name', 'last_name',
+#                   'is_subscribed', 'recipes', 'recipes_count')
+
+#     @staticmethod
+#     def get_recipes_count(obj):
+#         return obj.recipes.count()
+
+#     def get_recipes(self, obj):
+#         request = self.context.get('request')
+#         recipes = obj.recipes.all()
+#         recipes_limit = request.query_params.get('recipes_limit')
+#         if recipes_limit:
+#             recipes = recipes[:int(recipes_limit)]
+#         return ShortRecipeSerializer(recipes, many=True).data
 
 
 class TagsSerializer(serializers.ModelSerializer):
@@ -306,11 +305,11 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         }).data
 
 
-class UsersCreateSerializer(UserCreateSerializer):
-    ''' Сериализатор создания пользователя.'''
+# class UsersCreateSerializer(UserCreateSerializer):
+#     ''' Сериализатор создания пользователя.'''
 
-    class Meta:
-        model = User
-        fields = (
-            'email', 'username', 'first_name',
-            'last_name', 'password')
+#     class Meta:
+#         model = Users
+#         fields = (
+#             'email', 'username', 'first_name',
+#             'last_name', 'password')
