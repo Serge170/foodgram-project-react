@@ -68,58 +68,6 @@ class FavoriteResipesSerializer(serializers.ModelSerializer):
             instance.recipes, context=context).data
 
 
-# class CustomUserSerializer(UserSerializer):
-#     ''' Сериализатор для пользователя.  Показывает статус подписум.'''
-#     is_subscribed = serializers.SerializerMethodField(read_only=True)
-
-#     class Meta:
-#         model = User
-#         fields = (
-#             'email',
-#             'id',
-#             'username',
-#             'first_name',
-#             'last_name',
-#             'is_subscribed')
-
-#     def get_is_subscribed(self, obj):
-#         user = self.context.get('request').user
-#         if user.is_anonymous:
-#             return False
-#         return Subscriptions.objects.filter(
-# user=user, author=obj.id).exists()
-
-
-# class ShortRecipesSerializer(serializers.ModelSerializer):
-#     ''' Сериализатор для краткого отображения сведений о рецепте'''
-#     class Meta:
-#         model = Recipes
-#         fields = ('id', 'name', 'image', 'cooking_time')
-
-
-# class SubscriptionsSerializer(CustomUserSerializer):
-#     ''' Сериализатор для вывода подписок пользователя.'''
-#     recipes = serializers.SerializerMethodField(read_only=True)
-#     recipes_count = serializers.SerializerMethodField(read_only=True)
-
-#     class Meta:
-#         model = User
-#         fields = ('email', 'id', 'username', 'first_name', 'last_name',
-#                   'is_subscribed', 'recipes', 'recipes_count')
-
-#     @staticmethod
-#     def get_recipes_count(obj):
-#         return obj.recipes.count()
-
-#     def get_recipes(self, obj):
-#         request = self.context.get('request')
-#         recipes = obj.recipes.all()
-#         recipes_limit = request.query_params.get('recipes_limit')
-#         if recipes_limit:
-#             recipes = recipes[:int(recipes_limit)]
-#         return ShortRecipeSerializer(recipes, many=True).data
-
-
 class TagsSerializer(serializers.ModelSerializer):
     ''' Сериализатор просмотра тегов.'''
     class Meta:
@@ -304,13 +252,3 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         return RecipesReadSerializer(instance, context={
             'request': self.context.get('request')
         }).data
-
-
-# class UsersCreateSerializer(UserCreateSerializer):
-#     ''' Сериализатор создания пользователя.'''
-
-#     class Meta:
-#         model = Users
-#         fields = (
-#             'email', 'username', 'first_name',
-#             'last_name', 'password')
