@@ -86,7 +86,8 @@ class FavoriteResipesSerializer(serializers.ModelSerializer):
 #         user = self.context.get('request').user
 #         if user.is_anonymous:
 #             return False
-#         return Subscriptions.objects.filter(user=user, author=obj.id).exists()
+#         return Subscriptions.objects.filter(
+# user=user, author=obj.id).exists()
 
 
 # class ShortRecipesSerializer(serializers.ModelSerializer):
