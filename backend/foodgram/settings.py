@@ -18,7 +18,7 @@ SECRET_KEY = (os.getenv('SECRET_KEY'),)
 # DEBUG = os.getenv('DEBUG_VALUE') == 'True'
 
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
-# ALLOWED_HOSTS = ['84.201.132.201', 'localhost', 'ypbackend.hopto.org']
+# ALLOWED_HOSTS = ['51.250.68.73', 'localhost', 'ypbackend.hopto.org']
 
 DEBUG = True
 # ALLOWED_HOSTS = ["*"]
