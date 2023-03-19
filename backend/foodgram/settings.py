@@ -19,7 +19,7 @@ SECRET_KEY = (os.getenv('SECRET_KEY'),)
 DEBUG = True
 
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
-# ALLOWED_HOSTS = ['51.250.68.73', 'localhost', 'ypbackend.hopto.org']
+# ALLOWED_HOSTS = ['51.250.79.106', 'localhost', 'ypbackend.hopto.org']
 # ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.User'
