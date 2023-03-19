@@ -49,7 +49,7 @@ class Subscriptions(models.Model):
         related_name='subscribtions',
         verbose_name='Автор')
 
-    class Meta: 
+    class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = [
