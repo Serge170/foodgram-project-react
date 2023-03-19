@@ -8,9 +8,9 @@ from users.models import User as User
 
 class Tags(models.Model):
     ''' Настройка модели Тэг.'''
-    name = models.CharField(max_length=50, verbose_name='Название тега')
+    name = models.CharField(max_length=100, verbose_name='Название тега')
     color = models.CharField(
-        max_length=50,
+        max_length=100,
         default='#E26C2D',
         verbose_name='Цвет')
     slug = models.SlugField(max_length=200, unique=True, verbose_name='slug')
@@ -22,9 +22,9 @@ class Tags(models.Model):
 
 class Ingredients(models.Model):
     ''' Настройка модели Ингридиенты.'''
-    name = models.CharField(max_length=50, verbose_name='Название ингридиета')
+    name = models.CharField(max_length=100, verbose_name='Название ингридиета')
     measurement_unit = models.CharField(
-        max_length=50,
+        max_length=100,
         verbose_name='Единица измерения')
 
     class Meta:
@@ -48,7 +48,7 @@ class Recipes(models.Model):
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор рецепта')
-    name = models.CharField(max_length=50, verbose_name='Название рецепта')
+    name = models.CharField(max_length=100, verbose_name='Название рецепта')
     image = models.ImageField(
         upload_to='recipes/',
         null=True,
