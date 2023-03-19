@@ -4,7 +4,7 @@ from api.pagination import LimitPageNumberPagination
 from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (FavoriteResipesSerializer, IngredientsSerializer,
                              RecipesCreateSerializer, RecipesReadSerializer,
-                             TagsSerializer)
+                             SubscriptionsSerializer, TagsSerializer)
 from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
@@ -14,7 +14,6 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.serializers import SubscriptionsSerializer
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
