@@ -6,7 +6,6 @@ from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
-from rest_framework.serializers import ModelSerializer
 from users.models import Subscriptions
 from users.serializers import CustomUserSerializer
 
@@ -334,7 +333,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
                 ),
                 recipes=recipes,
                 amount=ingredients.get('amount'),
-             )
+            )
             for ingredients in ingredients
         ]
         ingredients_list.sort(key=(lambda item: item.ç.name))
