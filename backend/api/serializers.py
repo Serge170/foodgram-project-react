@@ -336,18 +336,33 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             )
             for ingredients in ingredients
         ]
-        ingredients_list.sort(key=(lambda item: item.ç.name))
+        ingredients_list.sort(key=(lambda item: item.ingredients.name))
         IngredientsRecipes.objects.bulk_create(ingredients_list)
 
+    # def create(self, validated_data):
+    #     tags = validated_data.pop('tags')
+    #     ingredients = validated_data.pop('ingredients')
+    #     request = self.context.get('request')
+    #     recipes = Recipes.objects.create(author=request.user, **validated_data)
+    #     recipes.tags.set(tags)
+    #     self.set_recipes_ingredients(ingredients, recipes)
+    #     return recipes
+
     def create(self, validated_data):
-        """Сохраняет рецепт в БД и возвращает его."""
-        tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        request = self.context.get('request')
-        recipes = Recipes.objects.create(author=request.user, **validated_data)
+        tags = validated_data.pop('tags')
+        recipes = Recipes.objects.create(**validated_data)
         recipes.tags.set(tags)
-        self.set_recipes_ingredients(ingredients, recipes)
-        return recipes
+        for ingredients in ingredients:
+            id = ingredients.get('id')
+            amount = ingredients.get('amount')
+            ingredient_id = get_object_or_404(Ingredients, id=id)
+            IngredientsRecipes.objects.create(
+                recipes=recipes, ingredient=ingredient_id, amount=amount
+            )
+        recipes.save()
+        return
+
 
     def update(self, instance, validated_data):
         """Обновляет рецепт."""
