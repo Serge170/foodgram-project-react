@@ -344,7 +344,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
     #     ingredients = validated_data.pop('ingredients')
     #     request = self.context.get('request')
     #     recipes = Recipes.objects.create(author=request.user,
-    #                                       **validated_data)
+    #                                      **validated_data)
     #     recipes.tags.set(tags)
     #     self.set_recipes_ingredients(ingredients, recipes)
     #     return recipes
