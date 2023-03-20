@@ -12,7 +12,7 @@ class TagsAdmin(admin.ModelAdmin):
 
 class RecipesAdmin(admin.ModelAdmin):
     ''' Модель Recipes в интерфейсе админ панели.'''
-    list_display = ('author', 'name', 'cooking_time', 'ingredients')
+    list_display = ('author', 'name', 'cooking_time')
     search_fields = ('name', 'author', 'tags')
     list_filter = ('author', 'name', 'tags')
 
