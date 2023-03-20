@@ -61,9 +61,8 @@ class Recipes(models.Model):
         verbose_name='Ингредиенты',
         help_text='Выберите ингредиенты',
         related_name='recipes')
-    tags = models.ForeignKey(
+    tags = models.ManyToManyField(
         Tags,
-        on_delete=models.SET_NULL,
         blank=False,
         null=True,
         verbose_name='tags')
