@@ -363,7 +363,6 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         recipes.save()
         return
 
-
     def update(self, instance, validated_data):
         """Обновляет рецепт."""
         instance.tags.clear()
