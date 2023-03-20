@@ -1,15 +1,15 @@
 ''' Файл настройки селиализаторов.'''
 from api.fields import Base64ImageField
+from django.shortcuts import get_object_or_404
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
+from rest_framework.serializers import ModelSerializer
 from users.models import Subscriptions
 from users.serializers import CustomUserSerializer
-from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import ModelSerializer
+
 
 class RecipesShortSerializer(serializers.ModelSerializer):
     ''' Сериализатор полей избранных рецептов и покупок.'''
@@ -284,7 +284,8 @@ class SubscriptionsSerializer(CustomUserSerializer):
 #         request = self.context.get('request', None)
 #         tags = validated_data.pop('tags')
 #         ingredients = validated_data.pop('amount_ingredients')
-#         recipes = Recipes.objects.create(author=request.user, **validated_data)
+#         recipes = Recipes.objects.create(author=request.user,
+#                                           **validated_data)
 #         recipes.tags.set(tags)
 #         self.create_ingredients(recipes, ingredients)
 #         return recipes
@@ -301,7 +302,7 @@ class SubscriptionsSerializer(CustomUserSerializer):
 #         return RecipesReadSerializer(instance, context={
 #             'request': self.context.get('request')
 #         }).data
-    
+
 
 class RecipesCreateSerializer(ModelSerializer):
     ''' Сериализатор создания рецептов.'''
