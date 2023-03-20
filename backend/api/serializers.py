@@ -230,11 +230,11 @@ class SubscriptionsSerializer(CustomUserSerializer):
 #             if 'tags' in data:
 #                 tags = data['tags']
 
-#                 for tag in tags:
-#                     if tag.id in tags_list:
+#                 for tags in tags:
+#                     if tags.id in tags_list:
 #                         raise serializers.ValidationError(
-#                             F'Тег {tag} повторяется')
-#                     tags_list.append(tag.id)
+#                             F'Тег {tags} повторяется')
+#                     tags_list.append(tags.id)
 
 #                 if len(tags_list) == 0:
 #                     raise serializers.ValidationError(
@@ -242,7 +242,7 @@ class SubscriptionsSerializer(CustomUserSerializer):
 #                 all_tags = Tags.objects.all().values_list('id', flat=True)
 #                 if not set(tags_list).issubset(all_tags):
 #                     raise serializers.ValidationError(
-#                         F'Тега {tag} не существует')
+#                         F'Тега {tags} не существует')
 #             if 'amount_ingredients' in data:
 #                 ingredients = data['amount_ingredients']
 #                 for ingredients in ingredients:
@@ -304,89 +304,62 @@ class SubscriptionsSerializer(CustomUserSerializer):
 #         }).data
 
 
-class RecipesCreateSerializer(ModelSerializer):
-    ''' Сериализатор создания рецептов.'''
-    tags = serializers.PrimaryKeyRelatedField(queryset=Tags.objects.all(),
-                                  many=True)
+class RecipesCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания рецепта."""
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tags.objects.all(),
+        many=True
+    )
+    ingredients = IngredientsRecipesSerializer(
+        many=True,
+    )
+    image = Base64ImageField(max_length=None)
     author = CustomUserSerializer(read_only=True)
-    ingredients = IngredientsRecipesSerializer(many=True)
-    image = Base64ImageField()
 
     class Meta:
         model = Recipes
         fields = (
-            'id',
-            'tags',
-            'author',
-            'ingredients',
-            'name',
-            'image',
-            'text',
-            'cooking_time',
+            'id', 'tags', 'author',
+            'ingredients', 'name', 'image',
+            'text', 'cooking_time'
         )
 
-    def validate_ingredients(self, value):
-        if not value:
-            raise ValidationError({
-                'ingredients': 'Нужен хотя бы один ингредиент!'
-            })
-        ingredients_list = []
-        for item in value:
-            ingredient = get_object_or_404(Ingredients, id=item['id'])
-            if ingredient in ingredients_list:
-                raise ValidationError({
-                    'ingredients': 'Ингридиенты не должны повторяться!'
-                })
-            if int(item['amount']) <= 0:
-                raise ValidationError({
-                    'amount': 'Количество ингредиента должно быть больше 0!'
-                })
-            ingredients_list.append(ingredient)
-        return value
-
-    def validate_tags(self, value):
-        if not value:
-            raise ValidationError({
-                'tags': 'Нужно выбрать хотя бы один тег!'
-            })
-        tags_set = set(value)
-        if len(value) != len(tags_set):
-            raise ValidationError({
-                'tags': 'Теги должны быть уникальными!'
-            })
-        return value
-
-    def create_ingredients_amounts(self, ingredients, recipes):
-        for ingredient in ingredients:
-            ing, _ = IngredientsRecipesSerializer.objects.get_or_create(
-                ingredient=get_object_or_404(
-                    Ingredients.objects.filter(id=ingredient['id'])
+    @staticmethod
+    def set_recipes_ingredients(ingredients, recipes):
+        """Добавляет ингредиенты в рецепт."""
+        ingredients_list = [
+            IngredientsRecipes(
+                ingredients=get_object_or_404(
+                    Ingredients, pk=ingredients.get('id').id
                 ),
-                amount=ingredient['amount'],
-            )
-            recipes.ingredients.add(ing.id)
+                recipes=recipes,
+                amount=ingredients.get('amount'),
+             )
+            for ingredients in ingredients
+        ]
+        ingredients_list.sort(key=(lambda item: item.ç.name))
+        IngredientsRecipes.objects.bulk_create(ingredients_list)
 
     def create(self, validated_data):
+        """Сохраняет рецепт в БД и возвращает его."""
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        recipes = Recipes.objects.create(**validated_data)
+        request = self.context.get('request')
+        recipes = Recipes.objects.create(author=request.user, **validated_data)
         recipes.tags.set(tags)
-        self.create_ingredients_amounts(recipes=recipes,
-                                        ingredients=ingredients)
+        self.set_recipes_ingredients(ingredients, recipes)
         return recipes
 
     def update(self, instance, validated_data):
+        """Обновляет рецепт."""
+        instance.tags.clear()
+        IngredientsRecipes.objects.filter(recipes=instance).delete()
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        instance.tags.clear()
         instance.tags.set(tags)
-        instance.ingredients.clear()
-        self.create_ingredients_amounts(recipes=instance,
-                                        ingredients=ingredients)
+        self.set_recipes_ingredients(ingredients, instance)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
-        request = self.context.get('request')
-        context = {'request': request}
-        return RecipesReadSerializer(instance,
-                                    context=context).data
+        """Метод для отображения данных в соответствии с ТЗ."""
+        return RecipesReadSerializer(instance).data
