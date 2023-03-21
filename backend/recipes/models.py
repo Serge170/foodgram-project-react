@@ -64,7 +64,6 @@ class Recipes(models.Model):
     tags = models.ManyToManyField(
         Tags,
         blank=False,
-        null=True,
         verbose_name='tags')
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовление',

@@ -31,13 +31,13 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         model = ShoppingCart
         fields = ('user', 'recipes',)
 
-    def validate(self, data):
-        user = data['user']
-        if user.shopping_cart.filter(recipes=data['recipes']).exists():
-            raise serializers.ValidationError(
-                'Рецепт уже добавлен в корзину'
-            )
-        return data
+    # def validate(self, data):
+    #     user = data['user']
+    #     if user.shopping_cart.filter(recipes=data['recipes']).exists():
+    #         raise serializers.ValidationError(
+    #             'Рецепт уже добавлен в корзину'
+    #         )
+    #     return data
 
     def to_representation(self, instance):
         return RecipesShortSerializer(
