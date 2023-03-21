@@ -1,7 +1,7 @@
 ''' Настройка Вьюсетов.'''
 from api.filters import IngredientsFilter, RecipesFilter
 from api.pagination import LimitPageNumberPagination
-from api.permissions import IsAuthorOrReadOnly
+from api.permissions import IsAuthorAdminOrReadOnly
 from api.serializers import (FavoriteResipesSerializer, IngredientsSerializer,
                              RecipesCreateSerializer, RecipesReadSerializer,
                              SubscriptionsSerializer, TagsSerializer)
@@ -38,7 +38,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     ''' Вьюсет рецептов.'''
     queryset = Recipes.objects.all()
     serializer_class = RecipesReadSerializer
-    permission_classes = (IsAuthorOrReadOnly,)
+    permission_classes = (IsAuthorAdminOrReadOnly,)
     pagination_class = LimitPageNumberPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipesFilter

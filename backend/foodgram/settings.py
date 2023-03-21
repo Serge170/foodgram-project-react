@@ -15,12 +15,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = (os.getenv('SECRET_KEY'),)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.getenv('DEBUG_VALUE') == 'True'
-DEBUG = True
+DEBUG = os.getenv('DEBUG_VALUE') == 'True'
+# DEBUG = True
 
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
-# ALLOWED_HOSTS = ['51.250.79.106', 'localhost', 'ypbackend.hopto.org']
-# ALLOWED_HOSTS = ['*']
+
 
 AUTH_USER_MODEL = 'users.User'
 
