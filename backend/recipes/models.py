@@ -70,9 +70,13 @@ class Recipes(models.Model):
         validators=[MinValueValidator(1, message='Время меньше 1 минуты'),
                     MaxValueValidator(300, message='Время больше 300 минут'),
                     ])
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True
+    )
 
     class Meta:
-        ordering = ('-pub_date', )
+        ordering = ('-pub_date',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
