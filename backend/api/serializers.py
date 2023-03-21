@@ -39,6 +39,20 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
             )
         return data
 
+class RecipeFilter(FilterSet):
+    is_favorited = filters.BooleanFilter(
+        method='filter_is_favorited'
+    )
+    is_in_shopping_cart = filters.BooleanFilter(
+        method='filter_is_in_shopping_cart'
+    )
+
+    def filter_is_favorited(self, queryset, name, value):
+        ....
+
+
+
+
     def to_representation(self, instance):
         return RecipesShortSerializer(
             instance.recipes,
