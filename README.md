@@ -76,7 +76,7 @@ sudo docker-compose exec backend python manage.py createsuperuser
 sudo docker-compose exec backend python manage.py collectstatic --no-input
 ```
 
-- Команда для заполнения тестовыми ингридиентами:
+- Команда для заполнения ингридиентами:
 ```sh
 sudo docker-compose exec backend python manage.py import_db
 ```
