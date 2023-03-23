@@ -13,8 +13,8 @@ from .filters import IngredientsFilter, RecipesFilter
 from .pagination import LimitPageNumberPagination
 from .permissions import IsAuthorAdminOrReadOnly
 from .serializers import (FavoriteResipesSerializer, IngredientsSerializer,
-                             RecipesCreateSerializer, RecipesReadSerializer,
-                             SubscriptionsSerializer, TagsSerializer)
+                          RecipesCreateSerializer, RecipesReadSerializer,
+                          SubscriptionsSerializer, TagsSerializer)
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):

@@ -9,6 +9,7 @@ from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
 from users.models import Subscriptions, User
 from .fields import Base64ImageField
+
 from .serializers import CustomUserSerializer
 
 
