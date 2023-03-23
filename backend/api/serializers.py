@@ -8,9 +8,8 @@ from rest_framework.fields import SerializerMethodField
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
 from users.models import Subscriptions, User
+from users.serializers import CustomUserSerializer
 from .fields import Base64ImageField
-
-from .serializers import CustomUserSerializer
 
 
 class RecipesShortSerializer(serializers.ModelSerializer):
