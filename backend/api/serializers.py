@@ -245,7 +245,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         recipe = Recipes.objects.create(**validated_data)
         recipe.tags.set(tags_data)
-        for ingredient in create_ingredients:
+        for ingredient in ingredients:
             id = ingredient.get('id')
             amount = ingredient.get('amount')
             ingredient_id = get_object_or_404(Ingredients, id=id)
