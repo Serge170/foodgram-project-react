@@ -1,7 +1,8 @@
-''' Urls.'''
-from api.views import IngredientsViewSet, RecipesViewSet, TagsViewSet
+""" Urls."""
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
+
+from api.views import IngredientsViewSet, RecipesViewSet, TagsViewSet
 from users.views import CustomUserViewSet, UsersListView, UsersViewSet
 
 app_name = 'api'

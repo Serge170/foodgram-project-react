@@ -1,24 +1,30 @@
-''' Настройка админ панели.'''
+""" Настройка админ панели."""
 from django.contrib import admin
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
 
 
 class TagsAdmin(admin.ModelAdmin):
-    ''' Модель Tags в интерфейсе админ панели.'''
+    """ Модель Tags в интерфейсе админ панели."""
     list_display = ('name', 'color', 'slug')
     search_fields = ('name',)
 
 
+class RecipeIngredientInline(admin.TabularInline):
+    model = IngredientsRecipes
+    extra = 3
+    min_num = 1
+
+
 class RecipesAdmin(admin.ModelAdmin):
-    ''' Модель Recipes в интерфейсе админ панели.'''
+    """ Модель Recipes в интерфейсе админ панели."""
     list_display = ('author', 'name', 'cooking_time')
     search_fields = ('name', 'author', 'tags')
     list_filter = ('author', 'name', 'tags')
-
+    inlines = (RecipeIngredientInline, )
 
 class IngredientsAdmin(admin.ModelAdmin):
-    ''' Модель Ingredients в интерфейсе админ панели.'''
+    """ Модель Ingredients в интерфейсе админ панели."""
     list_display = (
         'name',
         'measurement_unit',
@@ -28,7 +34,7 @@ class IngredientsAdmin(admin.ModelAdmin):
 
 
 class IngredientsRecipesAdmin(admin.ModelAdmin):
-    ''' Модель Ingredients в интерфейсе админ панели.'''
+    """ Модель Ingredients в интерфейсе админ панели."""
     list_display = (
         'ingredients',
         'recipes',
@@ -38,7 +44,7 @@ class IngredientsRecipesAdmin(admin.ModelAdmin):
 
 
 class FavoriteResipesAdmin(admin.ModelAdmin):
-    ''' Модель FavoriteResipes в интерфейсе админ панели.'''
+    """ Модель FavoriteResipes в интерфейсе админ панели."""
     list_display = (
         'user',
         'recipes',
@@ -47,7 +53,7 @@ class FavoriteResipesAdmin(admin.ModelAdmin):
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
-    ''' Модель ShoppingCart в интерфейсе админ панели.'''
+    """ Модель ShoppingCart в интерфейсе админ панели."""
     list_display = (
         'user',
         'recipes',

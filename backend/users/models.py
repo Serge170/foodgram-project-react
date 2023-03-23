@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    '''Модель пользователя'''
+    """Модель пользователя"""
     email = models.EmailField(
         verbose_name='Электронная почта',
         max_length=254,
@@ -37,7 +37,7 @@ class User(AbstractUser):
 
 
 class Subscriptions(models.Model):
-    ''' Модель подписок.'''
+    """ Модель подписок."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -50,6 +50,7 @@ class Subscriptions(models.Model):
         verbose_name='Автор')
 
     class Meta:
+        ordering = ('-id', )
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = [

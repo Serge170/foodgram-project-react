@@ -1,7 +1,7 @@
-''' Создание приложения.'''
+""" Создание приложения."""
 from django.apps import AppConfig
 
 
 class UsersConfig(AppConfig):
-    ''' Создание приложения Users.'''
+    """ Создание приложения Users."""
     name = 'users'

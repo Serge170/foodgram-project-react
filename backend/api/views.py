@@ -1,23 +1,24 @@
-''' Настройка Вьюсетов.'''
-from api.filters import IngredientsFilter, RecipesFilter
-from api.pagination import LimitPageNumberPagination
-from api.permissions import IsAuthorAdminOrReadOnly
-from api.serializers import (FavoriteResipesSerializer, IngredientsSerializer,
-                             RecipesCreateSerializer, RecipesReadSerializer,
-                             SubscriptionsSerializer, TagsSerializer)
-from django.http import FileResponse
+""" Настройка Вьюсетов."""
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
-                            Recipes, ShoppingCart, Tags)
+from django.http import FileResponse
 from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from api.filters import IngredientsFilter, RecipesFilter
+from api.pagination import LimitPageNumberPagination
+from api.permissions import IsAuthorAdminOrReadOnly
+from api.serializers import (FavoriteResipesSerializer, IngredientsSerializer,
+                             RecipesCreateSerializer, RecipesReadSerializer,
+                             SubscriptionsSerializer, TagsSerializer)
+from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
+                            Recipes, ShoppingCart, Tags)
+
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
-    ''' Вьюсет тэгов.'''
+    """ Вьюсет тэгов."""
     queryset = Tags.objects.all()
     serializer_class = TagsSerializer
     permission_classes = [permissions.AllowAny]
@@ -25,7 +26,7 @@ class TagsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
-    ''' Вьюсет ингредиентов.'''
+    """ Вьюсет ингредиентов."""
     queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
     permission_classes = [permissions.AllowAny]
@@ -35,7 +36,7 @@ class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
-    ''' Вьюсет рецептов.'''
+    """ Вьюсет рецептов."""
     queryset = Recipes.objects.all()
     serializer_class = RecipesReadSerializer
     permission_classes = (IsAuthorAdminOrReadOnly,)
@@ -53,11 +54,12 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     def post_del_recipes(self, request, pk, database):
         recipes = get_object_or_404(Recipes, id=pk)
+        queryset = database.objects.filter
         if request.method == 'POST':
-            if not database.objects.filter(
+            if not queryset(
                     user=self.request.user,
                     recipes=recipes).exists():
-                database.objects.create(
+                database.objects.get_or_create(
                     user=self.request.user,
                     recipes=recipes)
                 serializer = SubscriptionsSerializer(recipes)
@@ -67,10 +69,10 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return Response(text, status=status.HTTP_400_BAD_REQUEST)
 
         if request.method == 'DELETE':
-            if database.objects.filter(
+            if queryset(
                     user=self.request.user,
                     recipes=recipes).exists():
-                database.objects.filter(
+                queryset(
                     user=self.request.user,
                     recipes=recipes).delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
@@ -80,6 +82,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         else:
             text = 'errors: Метод обращения недопустим.'
             return Response(text, status=status.HTTP_400_BAD_REQUEST)
+
 
     @action(
         detail=True,
@@ -95,7 +98,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def download_shopping_cart(self, request):
-        ''' Скачивает список покупок.'''
+        """ Скачивает список покупок."""
         user = request.user
         purchases = ShoppingCart.objects.filter(user=user)
         file = 'shopping-list.txt'

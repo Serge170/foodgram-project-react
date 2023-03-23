@@ -1,17 +1,19 @@
-''' Файл настройки селиализаторов.'''
-from api.fields import Base64ImageField
+""" Файл настройки селиализаторов."""
+
 from django.shortcuts import get_object_or_404
-from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
-                            Recipes, ShoppingCart, Tags)
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
+
+from api.fields import Base64ImageField
+from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
+                            Recipes, ShoppingCart, Tags)
 from users.models import Subscriptions, User
 from users.serializers import CustomUserSerializer
 
 
 class RecipesShortSerializer(serializers.ModelSerializer):
-    ''' Сериализатор полей избранных рецептов и покупок.'''
+    """ Сериализатор полей избранных рецептов и покупок."""
 
     class Meta:
         model = Recipes
@@ -19,14 +21,14 @@ class RecipesShortSerializer(serializers.ModelSerializer):
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
-    ''' Сериализатор полей ингридиентов.'''
+    """ Сериализатор полей ингридиентов."""
     class Meta:
         model = Ingredients
         fields = '__all__'
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    ''' Сериализатор для списка покупок.'''
+    """ Сериализатор для списка покупок."""
     class Meta:
         model = ShoppingCart
         fields = ('user', 'recipes',)
@@ -47,7 +49,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
 
 class FavoriteResipesSerializer(serializers.ModelSerializer):
-    ''' Сериализатор избранных рецептов.'''
+    """ Сериализатор избранных рецептов."""
     class Meta:
         model = FavoriteResipes
         fields = ('user', 'recipes')
@@ -73,14 +75,14 @@ class FavoriteResipesSerializer(serializers.ModelSerializer):
 
 
 class TagsSerializer(serializers.ModelSerializer):
-    ''' Сериализатор просмотра тегов.'''
+    """ Сериализатор просмотра тегов."""
     class Meta:
         model = Tags
         fields = ('id', 'name', 'color', 'slug')
 
 
 class IngredientsRecipesSerializer(serializers.ModelSerializer):
-    ''' Сериализатор связи ингридиентов и рецетов.'''
+    """ Сериализатор связи ингридиентов и рецетов."""
     id = serializers.IntegerField(write_only=True)
     amount = serializers.IntegerField(write_only=True)
 
@@ -90,7 +92,7 @@ class IngredientsRecipesSerializer(serializers.ModelSerializer):
 
 
 class IngredientsGetSerializer(serializers.ModelSerializer):
-    ''' Сериализатор получения ингридиентов.'''
+    """ Сериализатор получения ингридиентов."""
     id = serializers.ReadOnlyField(source='ingredients.id')
     name = serializers.ReadOnlyField(source='ingredients.name')
     measurement_unit = serializers.ReadOnlyField(
@@ -102,7 +104,7 @@ class IngredientsGetSerializer(serializers.ModelSerializer):
 
 
 class RecipesReadSerializer(serializers.ModelSerializer):
-    ''' Сериализатор чтения рецептов.'''
+    """ Сериализатор чтения рецептов."""
     tags = serializers.SerializerMethodField()
     ingredients = IngredientsGetSerializer(
         many=True,
@@ -154,14 +156,14 @@ class RecipesReadSerializer(serializers.ModelSerializer):
 
 
 class ShortRecipesSerializer(serializers.ModelSerializer):
-    ''' Сериализатор для краткого отображения сведений о рецепте'''
+    """ Сериализатор для краткого отображения сведений о рецепте"""
     class Meta:
         model = Recipes
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class SubscriptionsSerializer(CustomUserSerializer):
-    ''' Сериализатор подписок.'''
+    """ Сериализатор подписок."""
     recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()
 
@@ -200,7 +202,7 @@ class SubscriptionsSerializer(CustomUserSerializer):
 
 
 class RecipesCreateSerializer(serializers.ModelSerializer):
-    '''Сериализатор для создания рецепта.'''
+    """Сериализатор для создания рецепта."""
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tags.objects.all(),
         many=True,
@@ -224,8 +226,8 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         )
 
     @staticmethod
-    def set_recipes_ingredients(ingredients, recipes):
-        '''Добавляет ингредиенты в рецепт.'''
+    def create_ingredients(ingredients, recipes):
+        """Добавляет ингредиенты в рецепт."""
         ingredients_list = [
             IngredientsRecipes(
                 ingredients=get_object_or_404(
@@ -239,12 +241,11 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         IngredientsRecipes.objects.bulk_create(ingredients_list)
 
     def create(self, validated_data):
-        print(validated_data)
         ingredients = validated_data.pop('amount_ingredients')
         tags_data = validated_data.pop('tags')
         recipe = Recipes.objects.create(**validated_data)
         recipe.tags.set(tags_data)
-        for ingredient in ingredients:
+        for ingredient in create_ingredients:
             id = ingredient.get('id')
             amount = ingredient.get('amount')
             ingredient_id = get_object_or_404(Ingredients, id=id)
@@ -254,17 +255,17 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        '''Обновляет рецепт.'''
+        """Обновляет рецепт."""
         instance.tags.clear()
         instance.ingredients.clear()
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('amount_ingredients')
         instance.tags.set(tags)
-        self.set_recipes_ingredients(ingredients, instance)
+        self.create_ingredients(ingredients, instance)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
-        '''Метод для отображения данных в соответствии с ТЗ.'''
+        """Метод для отображения данных в соответствии с ТЗ."""
         return RecipesReadSerializer(
             instance, context={'request': self.context.get('request')}
         ).data

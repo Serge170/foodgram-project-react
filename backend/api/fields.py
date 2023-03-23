@@ -1,4 +1,4 @@
-''' Кодирования и декодирования изображение.'''
+""" Кодирования и декодирования изображение."""
 
 import base64
 
@@ -7,7 +7,7 @@ from rest_framework import serializers
 
 
 class Base64ImageField(serializers.ImageField):
-    ''' Настройка кодирования и декодирования изображений.'''
+    """ Настройка кодирования и декодирования изображений."""
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')

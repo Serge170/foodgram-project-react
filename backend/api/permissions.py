@@ -1,9 +1,9 @@
-''' Файл настроки уровней доступа'''
+""" Файл настроки уровней доступа"""
 from rest_framework import permissions
 
 
 class IsAuthorAdminOrReadOnly(permissions.BasePermission):
-    ''' Настройка доступа на чтение.'''
+    """ Настройка доступа на чтение."""
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated and (
                 request.user.is_superuser or obj.author

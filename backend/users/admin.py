@@ -1,4 +1,4 @@
-'''Настройка админ панели'''
+"""Настройка админ панели"""
 
 from django.contrib import admin
 from users.models import Subscriptions, User
@@ -6,7 +6,7 @@ from users.models import Subscriptions, User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    '''Модель пользователя для админки'''
+    """Модель пользователя для админки"""
     list_display = (
         'pk',
         'username',
@@ -21,7 +21,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Subscriptions)
 class SubscriptionsAdmin(admin.ModelAdmin):
-    '''Модель подписки для админки'''
+    """Модель подписки для админки"""
     list_display = ('id', 'user', 'author')
     search_fields = ('user', 'author')
     list_filter = ('user', 'author')

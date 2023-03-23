@@ -1,4 +1,4 @@
-''' Создание моделей.'''
+""" Создание моделей."""
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -7,7 +7,7 @@ from users.models import User as User
 
 
 class Tags(models.Model):
-    ''' Настройка модели Тэг.'''
+    """ Настройка модели Тэг."""
     name = models.CharField(max_length=100, verbose_name='Название тега')
     color = models.CharField(
         max_length=100,
@@ -18,10 +18,13 @@ class Tags(models.Model):
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+    
+    def __str__(self):
+        return self.name
 
 
 class Ingredients(models.Model):
-    ''' Настройка модели Ингридиенты.'''
+    """ Настройка модели Ингридиенты."""
     name = models.CharField(max_length=100, verbose_name='Название ингридиета')
     measurement_unit = models.CharField(
         max_length=100,
@@ -38,11 +41,11 @@ class Ingredients(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return self.name
+        return f'{self.name}, {self.measurement_unit}'
 
 
 class Recipes(models.Model):
-    ''' Настройка модели Рецепты.'''
+    """ Настройка модели Рецепты."""
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -54,7 +57,7 @@ class Recipes(models.Model):
         null=True,
         blank=False,
         verbose_name='Изображение')
-    text = models.TextField(max_length=1000, verbose_name='Описание')
+    text = models.TextField(max_length=1500, verbose_name='Описание')
     ingredients = models.ManyToManyField(
         Ingredients,
         through='IngredientsRecipes',
@@ -68,7 +71,7 @@ class Recipes(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовление',
         validators=[MinValueValidator(1, message='Время меньше 1 минуты'),
-                    MaxValueValidator(300, message='Время больше 300 минут'),
+                    MaxValueValidator(1440, message='Время больше 1440 минут'),
                     ])
     pub_date = models.DateTimeField(
         verbose_name='Дата публикации',
@@ -79,9 +82,12 @@ class Recipes(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
+    def __str__(self):
+        return self.name
+
 
 class IngredientsRecipes(models.Model):
-    ''' Модель для настройки количества ингредиентов.'''
+    """ Модель для настройки количества ингредиентов."""
     ingredients = models.ForeignKey(
         Ingredients,
         on_delete=models.CASCADE,
@@ -102,7 +108,7 @@ class IngredientsRecipes(models.Model):
                 1, 'Количество ингредиентов меньше 1!'
             ),
             MaxValueValidator(
-                100, 'Количество ингредиентов больше 100!')
+                1500, 'Количество ингредиентов больше 1500!')
         ],
         default=1,
         verbose_name='Количество',
@@ -120,11 +126,11 @@ class IngredientsRecipes(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.ingredients} {self.recipes}'
+        return f'{self.ingredients} – {self.amount}'
 
 
 class FavoriteResipes(models.Model):
-    ''' Модель избранных рецептов пользователя.'''
+    """ Модель избранных рецептов пользователя."""
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
@@ -142,9 +148,12 @@ class FavoriteResipes(models.Model):
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
 
+    def __str__(self):
+        return f'{self.user} добавил "{self.recipes}" в Избранное'
+
 
 class ShoppingCart(models.Model):
-    ''' Модель списка покупок.'''
+    """ Модель списка покупок."""
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
@@ -161,3 +170,6 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = 'Покупка'
         verbose_name_plural = 'Покупки'
+
+    def __str__(self):
+        return f'{self.user} добавил "{self.recipes}" в свою корзину'

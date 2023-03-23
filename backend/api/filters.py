@@ -1,11 +1,11 @@
-'''Настраиваем  фильтры.'''
+"""Настраиваем  фильтры."""
 
 from django_filters.rest_framework import FilterSet, filters
 from recipes.models import Ingredients, Recipes, Tags
 
 
 class IngredientsFilter(FilterSet):
-    ''' Фильтр для игредиентов с поиском по названию.'''
+    """ Фильтр для игредиентов с поиском по названию."""
     name = filters.CharFilter(
         field_name='name',
         lookup_expr='istartswith')
@@ -16,7 +16,7 @@ class IngredientsFilter(FilterSet):
 
 
 class RecipesFilter(FilterSet):
-    ''' Фильтр для рецептов.'''
+    """ Фильтр для рецептов."""
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         to_field_name='slug',

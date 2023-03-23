@@ -1,5 +1,4 @@
-from api.pagination import LimitPageNumberPagination
-from api.serializers import SubscriptionsSerializer
+
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
@@ -8,19 +7,22 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from api.pagination import LimitPageNumberPagination
+from api.serializers import SubscriptionsSerializer
 from users.models import Subscriptions, User
 from users.serializers import CustomUserSerializer
 
 
 class CustomUserViewSet(UserViewSet):
-    ''' Вьюсет пользователей.'''
+    """ Вьюсет пользователей."""
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class UsersViewSet(APIView):
-    ''' Вьюсет пользователей.'''
+    """ Вьюсет пользователей."""
     serializer_class = SubscriptionsSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = LimitPageNumberPagination
@@ -52,12 +54,11 @@ class UsersViewSet(APIView):
 
     def delete(self, request, *args, **kwargs):
         user_id = self.kwargs.get('user_id')
-        get_object_or_404(User, id=user_id)
         subscription = Subscriptions.objects.filter(
             user=request.user,
-            author_id=user_id
+            author=get_object_or_404(User, id=user_id)
         )
-        if subscription:
+        if subscription.exists():
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
@@ -67,7 +68,7 @@ class UsersViewSet(APIView):
 
 
 class UsersListView(ListAPIView):
-    ''' Вьюсет пользователей просмотр.'''
+    """ Вьюсет пользователей просмотр."""
     serializer_class = SubscriptionsSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = LimitPageNumberPagination
