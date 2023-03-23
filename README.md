@@ -2,7 +2,7 @@
 
 **Foodgram** - продуктовый помощник.
 
-[![Django-app workflow](https://github.com/serge170/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/Serge170/foodgram-project-react/actions/workflows/main.yml)
+![example workflow](https://github.com/serge170/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 
 Пользователи **Foodgram** могут публиковать рецепты (**Recipes**), подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать в формате .txt сводный список продуктов (**Ingredients**), необходимых для приготовления одного или нескольких выбранных блюд.
 
@@ -76,7 +76,7 @@ sudo docker-compose exec backend python manage.py createsuperuser
 sudo docker-compose exec backend python manage.py collectstatic --no-input
 ```
 
-- Команда для заполнения тестовыми ингридиентами:
+- Команда для заполнения ингридиентами:
 ```sh
 sudo docker-compose exec backend python manage.py import_db
 ```
