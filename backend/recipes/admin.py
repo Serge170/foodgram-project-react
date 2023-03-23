@@ -23,6 +23,7 @@ class RecipesAdmin(admin.ModelAdmin):
     list_filter = ('author', 'name', 'tags')
     inlines = (RecipeIngredientInline, )
 
+
 class IngredientsAdmin(admin.ModelAdmin):
     """ Модель Ingredients в интерфейсе админ панели."""
     list_display = (

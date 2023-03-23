@@ -5,11 +5,11 @@ from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
 
-from api.fields import Base64ImageField
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
 from users.models import Subscriptions, User
-from users.serializers import CustomUserSerializer
+from .fields import Base64ImageField
+from .serializers import CustomUserSerializer
 
 
 class RecipesShortSerializer(serializers.ModelSerializer):

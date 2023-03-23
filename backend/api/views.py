@@ -7,14 +7,14 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.filters import IngredientsFilter, RecipesFilter
-from api.pagination import LimitPageNumberPagination
-from api.permissions import IsAuthorAdminOrReadOnly
-from api.serializers import (FavoriteResipesSerializer, IngredientsSerializer,
-                             RecipesCreateSerializer, RecipesReadSerializer,
-                             SubscriptionsSerializer, TagsSerializer)
 from recipes.models import (FavoriteResipes, Ingredients, IngredientsRecipes,
                             Recipes, ShoppingCart, Tags)
+from .filters import IngredientsFilter, RecipesFilter
+from .pagination import LimitPageNumberPagination
+from .permissions import IsAuthorAdminOrReadOnly
+from .serializers import (FavoriteResipesSerializer, IngredientsSerializer,
+                             RecipesCreateSerializer, RecipesReadSerializer,
+                             SubscriptionsSerializer, TagsSerializer)
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -82,7 +82,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
         else:
             text = 'errors: Метод обращения недопустим.'
             return Response(text, status=status.HTTP_400_BAD_REQUEST)
-
 
     @action(
         detail=True,
