@@ -232,7 +232,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             })
         ingredients_list = []
         for item in value:
-            ingredient = get_object_or_404(Ingredient, id=item['id'])
+            ingredient = get_object_or_404(Ingredients, id=item['id'])
             if ingredient in ingredients_list:
                 raise ValidationError({
                     'ingredients': 'Ингридиенты не должны повторяться!'
