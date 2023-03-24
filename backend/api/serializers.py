@@ -240,41 +240,6 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         ingredients_list.sort(key=(lambda item: item.ingredients.name))
         IngredientsRecipes.objects.bulk_create(ingredients_list)
 
-    def validate(self, data):
-        ingredients = self.initial_data.get('ingredients')
-        tags = self.initial_data.get('tags')
-        if not ingredients:
-            raise serializers.ValidationError(
-                'Необходим минимум один ингредиент для рецепта'
-            )
-        if not tags:
-            raise serializers.ValidationError(
-                'Необходим минимум один тег для рецепта'
-            )
-        ingredient_list = []
-        for ingredient_item in ingredients:
-            if not Ingredients.objects.filter(
-                    pk=ingredient_item['id']).exists():
-                raise serializers.ValidationError(
-                    'Ингредиента с таким id не существует'
-                )
-            if int(ingredient_item['id']) in ingredient_list:
-                raise serializers.ValidationError('Укажите уникальный '
-                                                  'ингредиент')
-            if 'amount' not in ingredient_item:
-                raise serializers.ValidationError('Количество ингредиента '
-                                                  'не может быть пустым')
-            amount = int(ingredient_item['amount'])
-            if amount <= 0 or amount > 32766:
-                raise serializers.ValidationError(
-                    'Укажите корректное количество ингредиента, '
-                    'в диапазоне от 0,01 до 32766'
-                )
-            ingredient_list.append(ingredient_item['id'])
-        data['ingredients'] = ingredients
-        data['tags'] = tags
-        return
-
     def create(self, validated_data):
         ingredients = validated_data.pop('amount_ingredients')
         tags_data = validated_data.pop('tags')
