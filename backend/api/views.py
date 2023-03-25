@@ -14,8 +14,8 @@ from .pagination import LimitPageNumberPagination
 from .permissions import IsAuthorAdminOrReadOnly
 from .serializers import (FavoriteResipesSerializer, IngredientsSerializer,
                           RecipesCreateSerializer, RecipesReadSerializer,
-                          RecipesShortSerializer, TagsSerializer,
-                          ShoppingCartSerializer)
+                          RecipesShortSerializer, ShoppingCartSerializer,
+                          TagsSerializer)
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
