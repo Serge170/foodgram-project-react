@@ -260,6 +260,66 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
     #     data['tags'] = tags
     #     return data
 
+
+    def validate(self, data):
+        name = data.get("name")
+        if len(name) < 4:
+            raise serializers.ValidationError(
+                {"name": "Название рецепта минимум 4 символа"}
+            )
+        ingredients = data.get("ingredients")
+        for ingredient in ingredients:
+            if not Ingredients.objects.filter(id=ingredient["id"]).exists():
+                raise serializers.ValidationError(
+                    {
+                        "ingredients":
+                        f'Ингредиента с id - {ingredient["id"]} нет'
+                    }
+                )
+        if len(ingredients) != len(set([item["id"] for item in ingredients])):
+            raise serializers.ValidationError(
+                "Ингредиенты не должны повторяться!"
+            )
+        tags = data.get("tags")
+        if len(tags) != len(set([item for item in tags])):
+            raise serializers.ValidationError(
+                {"tags": "Тэги не должны повторяться!"}
+            )
+        amounts = data.get("ingredients")
+        if [item for item in amounts if item["amount"] < 1]:
+            raise serializers.ValidationError(
+                {"amount": "Минимальное количество ингредиента 1"}
+            )
+        if [item for item in amounts if item["amount"] > 13000]:
+            raise serializers.ValidationError(
+                {"amount": "Максимальное количество ингредиента 13000"}
+            )
+        cooking_time = data.get("cooking_time")
+        if cooking_time > 480:
+            raise serializers.ValidationError(
+                {"cooking_time":
+                 "Время приготовления блюда > 480 минут"}
+            )
+        if cooking_time < 1:
+            raise serializers.ValidationError(
+                {"cooking_time":
+                 "Время приготовления блюда меньше 1 минуты"}
+            )
+        return data
+
+    def create_ingredients(self, ingredients, recipe):
+        for ingredient in ingredients:
+            IngredientAmount.objects.bulk_create(
+                [
+                    IngredientAmount(
+                        recipe=recipe,
+                        ingredient_id=ingredient.get("id"),
+                        amount=ingredient.get("amount"),
+                    )
+                ]
+            )
+
+
     @staticmethod
     def create_ingredients(ingredients, recipes):
         """Добавляет ингредиенты в рецепт."""
