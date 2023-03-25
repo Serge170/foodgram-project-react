@@ -225,7 +225,6 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             'text', 'cooking_time'
         )
 
-
     # def validate(self, data):
     #     ingredients = self.initial_data.get('ingredients')
     #     tags = self.initial_data.get('tags')
