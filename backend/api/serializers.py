@@ -260,7 +260,6 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
     #     data['tags'] = tags
     #     return data
 
-
     def validate(self, data):
         name = data.get("name")
         if len(name) < 4:
@@ -306,19 +305,6 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
                  "Время приготовления блюда меньше 1 минуты"}
             )
         return data
-
-    def create_ingredients(self, ingredients, recipe):
-        for ingredient in ingredients:
-            IngredientAmount.objects.bulk_create(
-                [
-                    IngredientAmount(
-                        recipe=recipe,
-                        ingredient_id=ingredient.get("id"),
-                        amount=ingredient.get("amount"),
-                    )
-                ]
-            )
-
 
     @staticmethod
     def create_ingredients(ingredients, recipes):
