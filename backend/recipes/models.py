@@ -116,7 +116,7 @@ class IngredientsRecipes(models.Model):
                 1, 'Количество ингредиентов не может быть меньше 1!'
             ),
             MaxValueValidator(
-                13000, 'Количество ингредиентов не может быть больше 13000!'
+                15000, 'Количество ингредиентов не может быть больше 15000!'
             )
         ],
         default=1,
@@ -129,7 +129,7 @@ class IngredientsRecipes(models.Model):
         verbose_name_plural = 'Количествово ингредиентов'
         constraints = [
             models.UniqueConstraint(
-                fields=['ingredients'],
+                fields=['recipes', 'ingredients'],
                 name='unique_ingredients_in_recipes',
             )
         ]
