@@ -81,6 +81,7 @@ class Recipes(models.Model):
         verbose_name='Время приготовления',
         help_text='Время приготовления в минутах',
     )
+    
     pub_date = models.DateTimeField(
         verbose_name='Дата публикации',
         auto_now_add=True)
