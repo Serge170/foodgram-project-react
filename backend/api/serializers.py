@@ -276,7 +276,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         IngredientsRecipes.objects.bulk_create(ingredients_list)
 
     def create(self, validated_data):
-        ingredients = validated_data.pop('amount')
+        ingredients = validated_data.pop('ingredients')
         tags_data = validated_data.pop('tags')
         recipe = Recipes.objects.create(**validated_data)
         recipe.tags.set(tags_data)
