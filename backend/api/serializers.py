@@ -225,20 +225,6 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             'text', 'cooking_time'
         )
 
-    def validate_ingredients(self, ingredients):
-        ingredients_list = []
-        if not ingredients:
-            raise serializers.ValidationError(
-                'Отсутствуют ингридиенты')
-        for ingredient in ingredients:
-            if ingredient['id'] in ingredients_list:
-                raise serializers.ValidationError(
-                    'Ингридиенты должны быть уникальны')
-            ingredients_list.append(ingredient['id'])
-            if int(ingredient.get('amount')) < 1:
-                raise serializers.ValidationError(
-                    'Количество ингредиента больше 0')
-        return ingredients
     # def validate(self, data):
     #     ingredients = self.initial_data.get('ingredients')
     #     tags = self.initial_data.get('tags')
@@ -273,6 +259,26 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
     #     data['ingredients'] = ingredients
     #     data['tags'] = tags
     #     return data
+
+    def validate_ingredients(self, value):
+        ingredients = value
+        if not ingredients:
+            raise ValidationError({
+                'ingredients': 'Нужен хотя бы один ингредиент!'
+            })
+        ingredients_list = []
+        for item in ingredients:
+            ingredient = get_object_or_404(Ingredients, id=item['id'])
+            if ingredient in ingredients_list:
+                raise ValidationError({
+                    'ingredients': 'Ингридиенты не могут повторяться!'
+                })
+            if int(item['amount']) <= 0:
+                raise ValidationError({
+                    'amount': 'Количество ингредиента должно быть больше 0!'
+                })
+            ingredients_list.append(ingredient)
+        return value
 
     @staticmethod
     def create_ingredients(ingredients, recipes):
