@@ -14,8 +14,8 @@ from .pagination import LimitPageNumberPagination
 from .permissions import IsAuthorAdminOrReadOnly
 from .serializers import (FavoriteResipesSerializer, IngredientsSerializer,
                           RecipesCreateSerializer, RecipesReadSerializer,
-                          TagsSerializer, ShoppingCartSerializer,
-                          RecipesShortSerializer)
+                          RecipesShortSerializer, TagsSerializer,
+                          ShoppingCartSerializer)
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -63,8 +63,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save(user=self.request.user, recipes=recipes)
             test = RecipesShortSerializer(
-                recipes, context={'request': request}
-                )
+                recipes, context={'request': request})
             return Response(test.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
