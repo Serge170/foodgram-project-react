@@ -14,7 +14,8 @@ from .pagination import LimitPageNumberPagination
 from .permissions import IsAuthorAdminOrReadOnly
 from .serializers import (FavoriteResipesSerializer, IngredientsSerializer,
                           RecipesCreateSerializer, RecipesReadSerializer,
-                          SubscriptionsSerializer, TagsSerializer)
+                          SubscriptionsSerializer, TagsSerializer,
+                          ShoppingCartSerializer, RecipesShortSerializer)
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -56,32 +57,17 @@ class RecipesViewSet(viewsets.ModelViewSet):
         recipes = get_object_or_404(Recipes, id=pk)
         queryset = database.objects.filter
         if request.method == 'POST':
-            if not queryset(
-                    user=self.request.user,
-                    recipes=recipes).exists():
-                database.objects.get_or_create(
-                    user=self.request.user,
-                    recipes=recipes)
-                serializer = SubscriptionsSerializer(recipes)
-                return Response(serializer.data,
-                                status=status.HTTP_201_CREATED)
-            text = 'errors: Объект уже в списке.'
-            return Response(text, status=status.HTTP_400_BAD_REQUEST)
+            serializer = ShoppingCartSerializer(
+                data={'user': self.request.user.pk, 'recipes': recipes.pk},
+                context={'request': request})
+            serializer.is_valid(raise_exception=True)
+            serializer.save(user=self.request.user, recipes=recipes)
+            test = RecipesShortSerializer(recipes, context={'request': request})
+            return Response(test.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
-            if queryset(
-                    user=self.request.user,
-                    recipes=recipes).exists():
-                queryset(
-                    user=self.request.user,
-                    recipes=recipes).delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            text = 'errors: Объект не в списке.'
-            return Response(text, status=status.HTTP_400_BAD_REQUEST)
-
-        else:
-            text = 'errors: Метод обращения недопустим.'
-            return Response(text, status=status.HTTP_400_BAD_REQUEST)
+            queryset(user=self.request.user, recipes=recipes).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,
@@ -90,6 +76,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk):
         return self.post_del_recipes(request, pk, ShoppingCart)
+
 
     @action(
         detail=False,
@@ -119,16 +106,19 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 f.write(f'* {name} - {amount}\n')
         return FileResponse(open(file, 'rb'), as_attachment=True)
 
+
     @action(detail=True, methods=['POST'],
             permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
         return self.post_method_for_actions(
             request=request, pk=pk, serializers=FavoriteResipesSerializer)
 
+
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
         return self.delete_method_for_actions(
             request=request, pk=pk, model=FavoriteResipes)
+
 
     @staticmethod
     def delete_method_for_actions(request, pk, model):
@@ -138,10 +128,13 @@ class RecipesViewSet(viewsets.ModelViewSet):
         model_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
     @staticmethod
     def post_method_for_actions(request, pk, serializers):
-        data = {'user': request.user.id, 'recipes': pk}
+        recipe = get_object_or_404(Recipes, pk=pk)
+        data = {'user': request.user.id, 'recipes': recipe.pk}
         serializer = serializers(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        info = RecipesShortSerializer(recipe, context={'request': request})
+        return Response(info.data, status=status.HTTP_201_CREATED)

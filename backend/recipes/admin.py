@@ -12,7 +12,7 @@ class TagsAdmin(admin.ModelAdmin):
 
 class RecipeIngredientInline(admin.TabularInline):
     model = IngredientsRecipes
-    extra = 3
+    extra = 1
     min_num = 1
 
 

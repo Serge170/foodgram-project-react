@@ -41,12 +41,6 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
             )
         return data
 
-    def to_representation(self, instance):
-        return RecipesShortSerializer(
-            instance.recipes,
-            context={'request': self.context.get('request')}
-        ).data
-
 
 class FavoriteResipesSerializer(serializers.ModelSerializer):
     """ Сериализатор избранных рецептов."""
@@ -67,12 +61,6 @@ class FavoriteResipesSerializer(serializers.ModelSerializer):
             })
         return data
 
-    def to_representation(self, instance):
-        request = self.context.get('request')
-        context = {'request': request}
-        return ShoppingCartSerializer(
-            instance.recipes, context=context).data
-
 
 class TagsSerializer(serializers.ModelSerializer):
     """ Сериализатор просмотра тегов."""
@@ -84,7 +72,6 @@ class TagsSerializer(serializers.ModelSerializer):
 class IngredientsRecipesSerializer(serializers.ModelSerializer):
     """ Сериализатор связи ингридиентов и рецетов."""
     id = serializers.IntegerField(write_only=True)
-    # amount = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = IngredientsRecipes
@@ -224,6 +211,28 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             'ingredients', 'name', 'image',
             'text', 'cooking_time'
         )
+
+    def validate(self, data):
+        ingredients = self.initial_data['ingredients']
+
+        if not ingredients:
+            raise serializers.ValidationError(
+                'Минимально должен быть 1 ингредиент.'
+            )
+
+        ingredient_list = []
+        for item in ingredients:
+            if not item.get('id') or not item.get('amount'):
+                raise serializers.ValidationError(
+                    'Обязательно нужно указать id ингредиента и его количество'
+                )
+            ingredient = get_object_or_404(Ingredients, id=item['id'])
+            if ingredient in ingredient_list:
+                raise serializers.ValidationError(
+                    'Ингредиент не должен повторяться.'
+                )
+            ingredient_list.append(ingredient)
+        return data
 
     @staticmethod
     def create_ingredients(ingredients, recipes):
