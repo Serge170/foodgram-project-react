@@ -226,6 +226,52 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
         )
 
     # def validate(self, data):
+    #     name = data.get("name")
+    #     if len(name) < 4:
+    #         raise serializers.ValidationError(
+    #             {"name": "Название рецепта минимум 4 символа"}
+    #         )
+    #     ingredients = data.get("ingredients")
+    #     for ingredient in ingredients:
+    #         if not Ingredient.objects.filter(id=ingredient["id"]).exists():
+    #             raise serializers.ValidationError(
+    #                 {
+    #                     "ingredients":
+    #                     f'Ингредиента с id - {ingredient["id"]} нет'
+    #                 }
+    #             )
+    #     if len(ingredients) != len(set([item["id"] for item in ingredients])):
+    #         raise serializers.ValidationError(
+    #             "Ингредиенты не должны повторяться!"
+    #         )
+    #     tags = data.get("tags")
+    #     if len(tags) != len(set([item for item in tags])):
+    #         raise serializers.ValidationError(
+    #             {"tags": "Тэги не должны повторяться!"}
+    #         )
+    #     amounts = data.get("ingredients")
+    #     if [item for item in amounts if item["amount"] < 1]:
+    #         raise serializers.ValidationError(
+    #             {"amount": "Минимальное количество ингредиента 1"}
+    #         )
+    #     if [item for item in amounts if item["amount"] > 3000]:
+    #         raise serializers.ValidationError(
+    #             {"amount": "Максимальное количество ингредиента 3000"}
+    #         )
+    #     cooking_time = data.get("cooking_time")
+    #     if cooking_time > 480:
+    #         raise serializers.ValidationError(
+    #             {"cooking_time":
+    #              "Время приготовления блюда > 480 минут"}
+    #         )
+    #     if cooking_time < 1:
+    #         raise serializers.ValidationError(
+    #             {"cooking_time":
+    #              "Время приготовления блюда меньше 1 минуты"}
+    #         )
+    #     return data
+
+    # def validate(self, data):
     #     ingredients = self.initial_data.get('ingredients')
     #     tags = self.initial_data.get('tags')
     #     if not ingredients:
@@ -244,7 +290,7 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
     #                 'Ингредиента с таким id не существует'
     #             )
     #         if int(ingredient_item['id']) in ingredient_list:
-    #             raise serializers.ValidationError('Укажите уникальный '
+    #             raise serializers.ValidationError('Укажите уникальный'
     #                                               'ингредиент')
     #         if 'amount' not in ingredient_item:
     #             raise serializers.ValidationError('Количество ингредиента '
