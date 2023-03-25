@@ -84,7 +84,7 @@ class TagsSerializer(serializers.ModelSerializer):
 class IngredientsRecipesSerializer(serializers.ModelSerializer):
     """ Сериализатор связи ингридиентов и рецетов."""
     id = serializers.IntegerField(write_only=True)
-    amount = serializers.IntegerField(write_only=True)
+    # amount = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = IngredientsRecipes
